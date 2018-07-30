@@ -50,13 +50,14 @@ namespace XmlValidate
 
         public void SchemaValidationHandler(Object sender, ValidationEventArgs args)
         {
+            string sError = "";
             try
             {
                 if (errorList == null)
                 {
                     errorList = new List<string>();
                 }
-                string sError = $"<span style='font-weight:bold;'>Line:</span> {args.Exception.LineNumber.ToString()}; ";
+                sError += $"<span style='font-weight:bold;'>Line:</span> {args.Exception.LineNumber.ToString()}; ";
                 sError += $"<span style='font-weight:bold;'>Line Position:</span> {args.Exception.LinePosition.ToString()}; ";
                 sError += $"<span style='font-weight:bold;'>Exception Message:</span> {args.Exception.Message.ToString().Replace("System.FormatException:", "")}; ";
                 errorList.Add(sError);
