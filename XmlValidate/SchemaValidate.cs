@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
+using NLog;
 
 namespace XmlValidate
 {
@@ -10,9 +11,11 @@ namespace XmlValidate
     {
 
         private List<string> errorList = new List<string>();
+        private Logger _logger;
 
         public SchemaValidate()
         {
+            _logger = NLog.LogManager.GetCurrentClassLogger();
         }
 
         public bool ValidateSchema(string xml, string schema)
@@ -40,9 +43,9 @@ namespace XmlValidate
             }
             catch (Exception ex)
             {
+                _logger.Error(ex.ToString());
                 return false;
             }
-            
         }
 
         public void SchemaValidationHandler(Object sender, ValidationEventArgs args)
@@ -60,10 +63,8 @@ namespace XmlValidate
             }
             catch (Exception ex)
             {
-
-                
+                _logger.Error(ex.ToString());
             }
-
         }
     }
 }
