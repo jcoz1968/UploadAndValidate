@@ -8,6 +8,9 @@ namespace XmlValidate
 {
     public class SchemaValidate
     {
+
+        private List<string> errorList = new List<string>();
+
         public SchemaValidate()
         {
         }
@@ -21,7 +24,7 @@ namespace XmlValidate
                 XmlSchemaSet schemaSet = new XmlSchemaSet();
 
                 schemaSet.Add(null, schema);
-                //settings.ValidationEventHandler += new ValidationEventHandler()
+                settings.ValidationEventHandler += new ValidationEventHandler(this.SchemaValidationHandler);
 
                 settings.ValidationType = ValidationType.Schema;
                 settings.Schemas = schemaSet;
@@ -29,16 +32,38 @@ namespace XmlValidate
 
                 reader = XmlReader.Create(xml, settings);
 
-
-
-
-                return true;
+                if(errorList == null || errorList.Count == 0)
+                {
+                    return true;
+                }
+                return false;
             }
             catch (Exception ex)
             {
                 return false;
             }
             
+        }
+
+        public void SchemaValidationHandler(Object sender, ValidationEventArgs args)
+        {
+            try
+            {
+                if (errorList == null)
+                {
+                    errorList = new List<string>();
+                }
+                string sError = $"<span style='font-weight:bold;'>Line:</span> {args.Exception.LineNumber.ToString()}; ";
+                sError += $"<span style='font-weight:bold;'>Line Position:</span> {args.Exception.LinePosition.ToString()}; ";
+                sError += $"<span style='font-weight:bold;'>Exception Message:</span> {args.Exception.Message.ToString().Replace("System.FormatException:", "")}; ";
+                errorList.Add(sError);
+            }
+            catch (Exception ex)
+            {
+
+                
+            }
+
         }
     }
 }
